@@ -1,6 +1,7 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.booking.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.shareit.util.BookingStatus;
 
@@ -12,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @Builder
-public class BookingDto {
+public class Booking {
     private final int id;
     @DateTimeFormat
     @NotBlank
