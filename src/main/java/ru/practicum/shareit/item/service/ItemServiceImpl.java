@@ -105,11 +105,11 @@ public class ItemServiceImpl implements ItemService {
      * @param userId of owner
      */
     private void validateUserId(String userId) {
-        if (userId != null) {
-            int id = Integer.parseInt(userId);
-            userService.getUserById(id);    // Validation of user id
-        } else {
+        if (userId == null) {
             throw new ItemHeaderException("No header with user id!");
         }
+
+        int id = Integer.parseInt(userId);
+        userService.getUserById(id);    // Validation of user id
     }
 }

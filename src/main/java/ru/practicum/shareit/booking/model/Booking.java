@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
- * For Sprint add-bookings.
+ * Class with booking's components
  */
 @Data
 @Builder

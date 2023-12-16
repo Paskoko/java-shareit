@@ -5,10 +5,13 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * Class mapper fir item object
+ * Class mapper for item object
  */
 public class ItemMapper {
     /**
@@ -55,11 +58,6 @@ public class ItemMapper {
      * @return list of itemDto objects
      */
     public static List<ItemDto> toListUserDto(List<Item> itemList) {
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        for (Item item : itemList) {
-            itemDtoList.add(toItemDto(item));
-        }
-
-        return itemDtoList;
+        return itemList.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 }

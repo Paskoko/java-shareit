@@ -3,7 +3,16 @@ package ru.practicum.shareit.booking;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 
+/**
+ * Class mapper for booking object
+ */
 public class BookingMapper {
+    /**
+     * Transform booking to bookingDto object
+     *
+     * @param booking to transform
+     * @return bookingDto object
+     */
     public static BookingDto toBookingDto(Booking booking) {
         return BookingDto.builder()
                 .id(booking.getId())
@@ -15,6 +24,12 @@ public class BookingMapper {
                 .build();
     }
 
+    /**
+     * Transform bookingDto to booking object
+     *
+     * @param bookingDto to transform
+     * @return booking object
+     */
     public static Booking toBooking(BookingDto bookingDto) {
         return Booking.builder()
                 .id(bookingDto.getId())

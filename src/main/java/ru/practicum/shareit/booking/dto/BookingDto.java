@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
- * TODO Sprint add-bookings.
+ * DTO class with booking's components
  */
 @Data
 @Builder

@@ -40,20 +40,20 @@ public class UserInMemoryStorage implements UserStorage {
      */
     @Override
     public User updateUser(User user) {
-        if (users.containsKey(user.getId())) {
-            User userFromStorage = users.get(user.getId());
-            if (user.getName() != null) {
-                userFromStorage.setName(user.getName());
-            }
-            if (user.getEmail() != null) {
-                checkUsersEmail(user);
-                userFromStorage.setEmail(user.getEmail());
-            }
-            users.put(user.getId(), userFromStorage);
-            return users.get(user.getId());
-        } else {
+        if (!users.containsKey(user.getId())) {
             throw new ResourceNotFoundException("No such user!");
         }
+
+        User userFromStorage = users.get(user.getId());
+        if (user.getName() != null) {
+            userFromStorage.setName(user.getName());
+        }
+        if (user.getEmail() != null) {
+            checkUsersEmail(user);
+            userFromStorage.setEmail(user.getEmail());
+        }
+        users.put(user.getId(), userFromStorage);
+        return users.get(user.getId());
     }
 
     /**
@@ -63,11 +63,11 @@ public class UserInMemoryStorage implements UserStorage {
      */
     @Override
     public void deleteUser(int id) {
-        if (users.containsKey(id)) {
-            users.remove(id);
-        } else {
+        if (!users.containsKey(id)) {
             throw new ResourceNotFoundException("No such user with that id!");
         }
+
+        users.remove(id);
     }
 
     /**
@@ -78,11 +78,11 @@ public class UserInMemoryStorage implements UserStorage {
      */
     @Override
     public User getUserById(int id) {
-        if (users.containsKey(id)) {
-            return users.get(id);
-        } else {
+        if (!users.containsKey(id)) {
             throw new ResourceNotFoundException("No such user with that id!");
         }
+
+        return users.get(id);
     }
 
     /**

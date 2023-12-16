@@ -88,6 +88,4 @@ public class ItemController {
         String userId = request.getHeader("X-Sharer-User-Id");
         return itemService.searchItems(text, userId);
     }
-
-
 }

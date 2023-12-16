@@ -43,16 +43,16 @@ public class ItemInMemoryStorage implements ItemStorage {
      */
     @Override
     public Item updateItem(Item item) {
-        if (items.containsKey(item.getId())) {
-            Item itemFromStorage = items.get(item.getId());
-            if (itemFromStorage.getOwnerId() != item.getOwnerId()) {
-                throw new ResourceNotFoundException("False owner id!");
-            }
-            items.put(item.getId(), itemFromStorage.compare(item));
-            return items.get(item.getId());
-        } else {
+        if (!items.containsKey(item.getId())) {
             throw new ResourceNotFoundException("No such item!");
         }
+
+        Item itemFromStorage = items.get(item.getId());
+        if (itemFromStorage.getOwnerId() != item.getOwnerId()) {
+            throw new ResourceNotFoundException("False owner id!");
+        }
+        items.put(item.getId(), itemFromStorage.compare(item));
+        return items.get(item.getId());
     }
 
     /**

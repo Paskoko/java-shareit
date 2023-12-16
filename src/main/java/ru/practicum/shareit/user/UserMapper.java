@@ -5,6 +5,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class mapper for user object
@@ -47,11 +48,6 @@ public class UserMapper {
      * @return list of userDto objects
      */
     public static List<UserDto> toListUserDto(List<User> userList) {
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (User user : userList) {
-            userDtoList.add(toUserDto(user));
-        }
-
-        return userDtoList;
+        return userList.stream().map(UserMapper::toUserDto).collect(Collectors.toList());
     }
 }

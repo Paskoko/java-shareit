@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * Class with item's components
  */
-
 @Data
 @Builder
 public class Item {
