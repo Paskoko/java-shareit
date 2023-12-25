@@ -1,8 +1,8 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +24,25 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .ownerId(item.getOwnerId())
                 .available(item.getIsAvailable())
-                .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
+                .requestId(item.getRequestId())
+                .comments(item.getCommentList())
+                .build();
+    }
+
+    /**
+     * Transform item to itemBookingDto object
+     *
+     * @param item to transform
+     * @return itemBookingDto object
+     */
+    public static ItemBookingDto toItemBookingDto(Item item) {
+        return ItemBookingDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .ownerId(item.getOwnerId())
+                .available(item.getIsAvailable())
+                .requestId(item.getRequestId())
                 .build();
     }
 
@@ -41,12 +59,27 @@ public class ItemMapper {
                 .description(itemDto.getDescription())
                 .ownerId(itemDto.getOwnerId())
                 .isAvailable(itemDto.getAvailable())
-                .request(ItemRequest.builder()
-                        .requestId(itemDto.getRequestId())
-                        .build())
+                .requestId(itemDto.getRequestId())
+                .commentList(itemDto.getComments())
                 .build();
     }
 
+    /**
+     * Transform itemBookingDto to item object
+     *
+     * @param itemBookingDto to transform
+     * @return item object
+     */
+    public static Item toItem(ItemBookingDto itemBookingDto) {
+        return Item.builder()
+                .id(itemBookingDto.getId())
+                .name(itemBookingDto.getName())
+                .description(itemBookingDto.getDescription())
+                .ownerId(itemBookingDto.getOwnerId())
+                .isAvailable(itemBookingDto.getAvailable())
+                .requestId(itemBookingDto.getRequestId())
+                .build();
+    }
 
     /**
      * Transform list of item to list of itemDto objects
@@ -54,7 +87,18 @@ public class ItemMapper {
      * @param itemList to transform
      * @return list of itemDto objects
      */
-    public static List<ItemDto> toListUserDto(List<Item> itemList) {
+    public static List<ItemDto> toListItemDto(List<Item> itemList) {
         return itemList.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
+
+    /**
+     * Transform list of item to list of itemDto objects
+     *
+     * @param itemList to transform
+     * @return list of itemDto objects
+     */
+    public static List<ItemBookingDto> toListItemBookingDto(List<Item> itemList) {
+        return itemList.stream().map(ItemMapper::toItemBookingDto).collect(Collectors.toList());
+    }
+
 }
