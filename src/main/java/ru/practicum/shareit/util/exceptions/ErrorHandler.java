@@ -8,13 +8,13 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.util.exceptions.model.ErrorResponse;
 
 import javax.validation.ValidationException;
+import java.util.NoSuchElementException;
 
 /**
  * Class handler for exceptions
  */
 @RestControllerAdvice
 public class ErrorHandler {
-
     @ExceptionHandler
     @ResponseStatus(code = HttpStatus.CONFLICT)
     public ErrorResponse handleConflictException(final ResourceConflictException e) {
@@ -24,6 +24,12 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ErrorResponse handleResourceNotFoundException(final ResourceNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ErrorResponse handleResourceNotFoundException(final NoSuchElementException e) {
         return new ErrorResponse(e.getMessage());
     }
 
@@ -42,6 +48,12 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleItemHeaderException(final ItemHeaderException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleNotSupportedStateException(final UnsupportedStatusException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

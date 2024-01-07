@@ -2,24 +2,23 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.booking.dto.BookingItemDto;
 
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
- * DTO class with item's components
+ * DTO class for item get requests to show last and next bookings
  */
 @Data
 @Builder
-public class ItemDto {
+public class ItemBookingDto {
     private int id;
-    @NotBlank
     private String name;
-    @NotBlank
     private String description;
     private int ownerId;
     private Boolean available;
     private int requestId;
-    private List<Comment> comments;
+    private List<CommentDto> comments;
+    private BookingItemDto lastBooking;
+    private BookingItemDto nextBooking;
 }

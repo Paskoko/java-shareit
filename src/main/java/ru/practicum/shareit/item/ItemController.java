@@ -2,6 +2,8 @@ package ru.practicum.shareit.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -44,7 +46,7 @@ public class ItemController {
      * @return item
      */
     @GetMapping(value = "/{itemId}")
-    public ItemDto getItemById(@PathVariable int itemId, HttpServletRequest request) {
+    public ItemBookingDto getItemById(@PathVariable int itemId, HttpServletRequest request) {
         String userId = request.getHeader("X-Sharer-User-Id");
         return itemService.getItemById(itemId, userId);
     }
@@ -56,7 +58,7 @@ public class ItemController {
      * @return list of all user's items
      */
     @GetMapping()
-    public List<ItemDto> getAllItems(HttpServletRequest request) {
+    public List<ItemBookingDto> getAllItems(HttpServletRequest request) {
         String userId = request.getHeader("X-Sharer-User-Id");
         return itemService.getAllItems(userId);
     }
@@ -87,5 +89,21 @@ public class ItemController {
     public List<ItemDto> search(@RequestParam(value = "text") String text, HttpServletRequest request) {
         String userId = request.getHeader("X-Sharer-User-Id");
         return itemService.searchItems(text, userId);
+    }
+
+
+    /**
+     * POST add comment request handler
+     *
+     * @param commentDto comment to add
+     * @param itemId     of item
+     * @param request    to get user id
+     * @return added comment
+     */
+    @PostMapping(value = "/{itemId}/comment")
+    public CommentDto addComment(@Valid @RequestBody CommentDto commentDto, @PathVariable int itemId,
+                                 HttpServletRequest request) {
+        String userId = request.getHeader("X-Sharer-User-Id");
+        return itemService.addComment(commentDto, itemId, userId);
     }
 }

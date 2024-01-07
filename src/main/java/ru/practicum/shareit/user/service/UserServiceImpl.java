@@ -3,8 +3,11 @@ package ru.practicum.shareit.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.storage.UserRepository;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.List;
@@ -18,9 +21,12 @@ public class UserServiceImpl implements UserService {
     @Qualifier("userInMemoryStorage")
     private final UserStorage userStorage;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public UserServiceImpl(UserStorage userStorage) {
+    public UserServiceImpl(UserStorage userStorage, UserRepository userRepository) {
         this.userStorage = userStorage;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -31,7 +37,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto createUser(UserDto user) {
-        return UserMapper.toUserDto(userStorage.addUser(UserMapper.toUser(user, user.getId())));
+        return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(user)));
     }
 
     /**
@@ -40,9 +46,13 @@ public class UserServiceImpl implements UserService {
      * @param user to update
      * @return updated user
      */
+    @Transactional
     @Override
     public UserDto updateUser(UserDto user, int userId) {
-        return UserMapper.toUserDto(userStorage.updateUser(UserMapper.toUser(user, userId)));
+        user.setId(userId);
+        User userFromRep = userRepository.findById(userId).orElseThrow();
+        userFromRep = userFromRep.compare(UserMapper.toUser(user));
+        return UserMapper.toUserDto(userRepository.save(userFromRep));
     }
 
     /**
@@ -52,7 +62,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(int id) {
-        userStorage.deleteUser(id);
+        userRepository.deleteById(id);
     }
 
     /**
@@ -63,7 +73,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getUserById(int id) {
-        return UserMapper.toUserDto(userStorage.getUserById(id));
+        return UserMapper.toUserDto(userRepository.findById(id).orElseThrow());
     }
 
     /**
@@ -73,6 +83,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserDto> getAllUsers() {
-        return UserMapper.toListUserDto(userStorage.getAllUsers());
+        return UserMapper.toListUserDto(userRepository.findAll());
     }
+
+
 }

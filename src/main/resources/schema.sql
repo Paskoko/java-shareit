@@ -1,0 +1,37 @@
+DROP TABLE IF EXISTS users,
+		items,
+		bookings;
+
+
+CREATE TABLE IF NOT EXISTS users(
+    user_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    name varchar(320) NOT NULL,
+	email varchar(512) NOT NULL,
+	CONSTRAINT uq_user_email UNIQUE (email)
+);
+
+CREATE TABLE IF NOT EXISTS items(
+    item_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    name varchar(320) NOT NULL,
+    description varchar(1000) NOT NULL,
+    is_available boolean NOT NULL,
+    owner_id BIGINT NOT NULL,
+    request_id BIGINT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS bookings(
+    booking_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    start_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    end_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    item_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+	state varchar(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS comments(
+    comment_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    text varchar(1000) NOT NULL,
+    item_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    created TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);

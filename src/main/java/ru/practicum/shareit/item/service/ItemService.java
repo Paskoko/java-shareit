@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item.service;
 
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public interface ItemService {
      * @param userId of owner
      * @return item
      */
-    ItemDto getItemById(int itemId, String userId);
+    ItemBookingDto getItemById(int itemId, String userId);
 
     /**
      * Get list of all user's items
@@ -33,7 +35,7 @@ public interface ItemService {
      * @param userId of owner
      * @return list of user's items
      */
-    List<ItemDto> getAllItems(String userId);
+    List<ItemBookingDto> getAllItems(String userId);
 
     /**
      * Update item with validation
@@ -53,4 +55,14 @@ public interface ItemService {
      * @return list of found items
      */
     List<ItemDto> searchItems(String text, String userId);
+
+    /**
+     * Add comment to the item
+     *
+     * @param commentDto to add
+     * @param itemId     of item
+     * @param userId     of user
+     * @return comment
+     */
+    CommentDto addComment(CommentDto commentDto, int itemId, String userId);
 }

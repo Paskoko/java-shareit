@@ -29,12 +29,11 @@ public class UserMapper {
      * Transform userDto to user object
      *
      * @param userDto to transform
-     * @param id      of user object
      * @return user object
      */
-    public static User toUser(UserDto userDto, int id) {
+    public static User toUser(UserDto userDto) {
         return User.builder()
-                .id(id)
+                .id(userDto.getId())
                 .name(userDto.getName())
                 .email(userDto.getEmail())
                 .build();
