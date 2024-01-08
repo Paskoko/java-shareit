@@ -3,22 +3,23 @@ package ru.practicum.shareit.request.dto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
+import ru.practicum.shareit.item.dto.ItemRequestDto;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * DTO class with item request's fields
+ * DTO class with request's fields
  */
 @Data
 @Builder
-public class ItemRequestDto {
+public class RequestDto {
     private int id;
     @NotBlank
     private String description;
-    @NotBlank
-    private int requestId;
+    private int requester;
     @DateTimeFormat
-    @NotBlank
-    private Date time;
+    private LocalDateTime created;
+    private List<ItemRequestDto> items;
 }

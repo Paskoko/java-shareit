@@ -32,10 +32,12 @@ public interface ItemService {
     /**
      * Get list of all user's items
      *
+     * @param from   index of the first element
+     * @param size   number of elements to return
      * @param userId of owner
      * @return list of user's items
      */
-    List<ItemBookingDto> getAllItems(String userId);
+    List<ItemBookingDto> getAllItems(Integer from, Integer size, String userId);
 
     /**
      * Update item with validation
@@ -51,10 +53,12 @@ public interface ItemService {
      * Search for items
      *
      * @param text   to search
+     * @param from   index of the first element
+     * @param size   number of elements to return
      * @param userId of user
      * @return list of found items
      */
-    List<ItemDto> searchItems(String text, String userId);
+    List<ItemDto> searchItems(String text, Integer from, Integer size, String userId);
 
     /**
      * Add comment to the item

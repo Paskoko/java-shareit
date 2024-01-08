@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingMapper;
@@ -22,6 +23,7 @@ import ru.practicum.shareit.util.exceptions.ResourceNotFoundException;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class service for operations with bookings storage
@@ -117,11 +119,13 @@ public class BookingServiceImpl implements BookingService {
      * Get all bookings for user
      *
      * @param bookingState of bookings
+     * @param from         index of the first element
+     * @param size         number of elements to return
      * @param userId       of owner
      * @return sorted list of all bookings
      */
     @Override
-    public List<BookingDto> getAllBookings(BookingState bookingState, String userId) {
+    public List<BookingDto> getAllBookings(BookingState bookingState, Integer from, Integer size, String userId) {
         validateUserId(userId);
 
         BooleanExpression byBookerId = QBooking.booking.booker.id.eq(Integer.parseInt(userId));
@@ -143,11 +147,20 @@ public class BookingServiceImpl implements BookingService {
                     .and(QBooking.booking.end.after(now)));
             sort = Sort.Direction.ASC;
         }
+        List<Booking> bookingList;
 
-
-        List<Booking> bookingList = (List<Booking>) bookingRepository.findAll(byBookerId.and(byState),
-                Sort.by(sort, "start"));
-
+        if ((from == null) && (size == null)) {
+            bookingList = (List<Booking>) bookingRepository.findAll(byBookerId.and(byState),
+                    Sort.by(sort, "start"));
+        } else {
+            if ((from < 0) || (size <= 0)) {
+                throw new ValidationException("Parameters should be natural!");
+            }
+            PageRequest page = PageRequest.of(from / size, size, Sort.by(sort, "start"));
+            bookingList = bookingRepository.findAll(byBookerId.and(byState), page)
+                    .stream()
+                    .collect(Collectors.toList());
+        }
         return BookingMapper.toListBookingDto(bookingList);
     }
 
@@ -155,14 +168,16 @@ public class BookingServiceImpl implements BookingService {
      * Get list of all booking for all user's items
      *
      * @param bookingState of bookings
+     * @param from         index of the first element
+     * @param size         number of elements to return
      * @param userId       of owner
      * @return list of all bookings
      */
     @Override
-    public List<BookingDto> getAllBookingsForAllItems(BookingState bookingState, String userId) {
+    public List<BookingDto> getAllBookingsForAllItems(BookingState bookingState, Integer from, Integer size, String userId) {
         validateUserId(userId);
 
-        if (itemService.getAllItems(userId).isEmpty())
+        if (itemService.getAllItems(null, null, userId).isEmpty())  // Check all items, without pagination
             return null;
         else {
             BooleanExpression byItem = QBooking.booking.item.ownerId.eq(Integer.parseInt(userId));
@@ -184,11 +199,22 @@ public class BookingServiceImpl implements BookingService {
                         .and(QBooking.booking.end.after(now)));
                 sort = Sort.Direction.ASC;
             }
+            List<Booking> bookingList;
 
-            Iterable<Booking> bookingList = bookingRepository.findAll(byItem.and(byState),
-                    Sort.by(sort, "start"));
+            if ((from == null) && (size == null)) {
+                bookingList = (List<Booking>) bookingRepository.findAll(byItem.and(byState),
+                        Sort.by(sort, "start"));
+            } else {
+                if ((from < 0) || (size <= 0)) {
+                    throw new ValidationException("Parameters should be natural!");
+                }
+                PageRequest page = PageRequest.of(from / size, size, Sort.by(sort, "start"));
+                bookingList = bookingRepository.findAll(byItem.and(byState), page)
+                        .stream()
+                        .collect(Collectors.toList());
+            }
 
-            return BookingMapper.toListBookingDto((List<Booking>) bookingList);
+            return BookingMapper.toListBookingDto(bookingList);
         }
     }
 

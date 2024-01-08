@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import ru.practicum.shareit.item.model.Comment;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -17,5 +18,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>, Quer
      * @param itemId of item
      * @return list of all item's comments
      */
+    @Transactional
     List<Comment> findByItem_Id(int itemId);
 }

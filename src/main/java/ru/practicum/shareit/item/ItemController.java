@@ -54,13 +54,18 @@ public class ItemController {
     /**
      * GET all items of the user
      *
+     * @param from    index of the first element
+     * @param size    number of elements to return
      * @param request to get user id
      * @return list of all user's items
      */
     @GetMapping()
-    public List<ItemBookingDto> getAllItems(HttpServletRequest request) {
+    public List<ItemBookingDto> getAllItems(
+            @RequestParam(value = "from", required = false) Integer from,
+            @RequestParam(value = "size", required = false) Integer size,
+            HttpServletRequest request) {
         String userId = request.getHeader("X-Sharer-User-Id");
-        return itemService.getAllItems(userId);
+        return itemService.getAllItems(from, size, userId);
     }
 
     /**
@@ -82,13 +87,19 @@ public class ItemController {
      * GET search request handler
      *
      * @param text    to search
+     * @param from    index of the first element
+     * @param size    number of elements to return
      * @param request to get user id
      * @return list of found items
      */
     @GetMapping(value = "/search")
-    public List<ItemDto> search(@RequestParam(value = "text") String text, HttpServletRequest request) {
+    public List<ItemDto> search(
+            @RequestParam(value = "text") String text,
+            @RequestParam(value = "from", required = false) Integer from,
+            @RequestParam(value = "size", required = false) Integer size,
+            HttpServletRequest request) {
         String userId = request.getHeader("X-Sharer-User-Id");
-        return itemService.searchItems(text, userId);
+        return itemService.searchItems(text, from, size, userId);
     }
 
 

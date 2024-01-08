@@ -1,6 +1,8 @@
 DROP TABLE IF EXISTS users,
 		items,
-		bookings;
+		bookings,
+		comments,
+		requests;
 
 
 CREATE TABLE IF NOT EXISTS users(
@@ -33,5 +35,12 @@ CREATE TABLE IF NOT EXISTS comments(
     text varchar(1000) NOT NULL,
     item_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
+    created TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS requests(
+    request_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    description varchar(1000) NOT NULL,
+    requestor_id BIGINT NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );

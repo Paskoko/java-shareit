@@ -75,18 +75,22 @@ public class BookingController {
     /**
      * GET all bookings for user by state
      *
+     * @param from    index of the first element
+     * @param size    number of elements to return
      * @param state   of booking
      * @param request to get user id
      * @return list of bookings
      */
     @GetMapping()
     public List<BookingDto> getAllBookings(
+            @RequestParam(value = "from", required = false) Integer from,
+            @RequestParam(value = "size", required = false) Integer size,
             @RequestParam(value = "state", defaultValue = "ALL", required = false) String state,
             HttpServletRequest request) {
         try {
             BookingState bookingState = BookingState.valueOf(state);
             String userId = request.getHeader("X-Sharer-User-Id");
-            return bookingService.getAllBookings(bookingState, userId);
+            return bookingService.getAllBookings(bookingState, from, size, userId);
         } catch (IllegalArgumentException exception) {
             throw new UnsupportedStatusException("Unknown state: " + state);
         }
@@ -96,18 +100,22 @@ public class BookingController {
      * GET all bookings for all items
      * by state
      *
+     * @param from    index of the first element
+     * @param size    number of elements to return
      * @param state   of booking
      * @param request to get user id
      * @return list of all bookings for all items
      */
     @GetMapping(value = "/owner")
     public List<BookingDto> getAllBookingsForAllItems(
+            @RequestParam(value = "from", required = false) Integer from,
+            @RequestParam(value = "size", required = false) Integer size,
             @RequestParam(value = "state", defaultValue = "ALL", required = false) String state,
             HttpServletRequest request) {
         try {
             BookingState bookingState = BookingState.valueOf(state);
             String userId = request.getHeader("X-Sharer-User-Id");
-            return bookingService.getAllBookingsForAllItems(bookingState, userId);
+            return bookingService.getAllBookingsForAllItems(bookingState, from, size, userId);
         } catch (IllegalArgumentException exception) {
             throw new UnsupportedStatusException("Unknown state: " + state);
         }

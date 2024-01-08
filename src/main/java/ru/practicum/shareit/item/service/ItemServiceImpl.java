@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,13 +103,30 @@ public class ItemServiceImpl implements ItemService {
      * Get list of all user's items
      * add booking info for all items
      *
+     * @param from   index of the first element
+     * @param size   number of elements to return
      * @param userId of owner
      * @return list of user's items
      */
     @Override
-    public List<ItemBookingDto> getAllItems(String userId) {
+    public List<ItemBookingDto> getAllItems(Integer from, Integer size, String userId) {
         validateUserId(userId);
-        return ItemMapper.toListItemBookingDto(itemRepository.findByOwnerId(Integer.parseInt(userId)))
+
+        List<Item> itemList;
+
+        if ((from == null) && (size == null)) {
+            itemList = itemRepository.findByOwnerId(Integer.parseInt(userId));
+        } else {
+            if ((from < 0) || (size <= 0)) {
+                throw new ValidationException("Parameters should be natural!");
+            }
+            PageRequest page = PageRequest.of(from / size, size);
+            itemList = itemRepository.findByOwnerId(Integer.parseInt(userId), page)
+                    .stream()
+                    .collect(Collectors.toList());
+        }
+
+        return ItemMapper.toListItemBookingDto(itemList)
                 .stream()
                 .peek(itemBookingDto -> {
                     itemBookingDto.setLastBooking(getLastBookingForItem(itemBookingDto.getId()));
@@ -141,25 +159,39 @@ public class ItemServiceImpl implements ItemService {
      * Search for items
      *
      * @param text   to search
+     * @param from   index of the first element
+     * @param size   number of elements to return
      * @param userId of user
      * @return list of found items
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> searchItems(String text, String userId) {
+    public List<ItemDto> searchItems(String text, Integer from, Integer size, String userId) {
         validateUserId(userId);
 
+        List<Item> searchItems = new ArrayList<>();
         if (text.isEmpty()) {
-            return ItemMapper.toListItemDto(new ArrayList<>());
+            return ItemMapper.toListItemDto(searchItems);
         }
 
         BooleanExpression byIsAvailable = QItem.item.isAvailable.isTrue();
         BooleanExpression byName = QItem.item.name.containsIgnoreCase(text);
         BooleanExpression byDescription = QItem.item.description.containsIgnoreCase(text);
 
-        Iterable<Item> searchItems = itemRepository.findAll(byIsAvailable.and(byName.or(byDescription)));
 
-        return ItemMapper.toListItemDto((List<Item>) searchItems);
+        if ((from == null) && (size == null)) {
+            searchItems = (List<Item>) itemRepository.findAll(byIsAvailable.and(byName.or(byDescription)));
+        } else {
+            if ((from < 0) || (size <= 0)) {
+                throw new ValidationException("Parameters should be natural!");
+            }
+            PageRequest page = PageRequest.of(from / size, size);
+            searchItems = itemRepository.findAll(byIsAvailable.and(byName.or(byDescription)), page)
+                    .stream()
+                    .collect(Collectors.toList());
+        }
+
+        return ItemMapper.toListItemDto(searchItems);
     }
 
 

@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -41,6 +42,22 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .ownerId(item.getOwnerId())
+                .available(item.getIsAvailable())
+                .requestId(item.getRequestId())
+                .build();
+    }
+
+    /**
+     * Transform item to itemRequestDto object
+     *
+     * @param item to transform
+     * @return itemRequestDto object
+     */
+    public static ItemRequestDto toItemRequestDto(Item item) {
+        return ItemRequestDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
                 .available(item.getIsAvailable())
                 .requestId(item.getRequestId())
                 .build();
@@ -92,13 +109,23 @@ public class ItemMapper {
     }
 
     /**
-     * Transform list of item to list of itemDto objects
+     * Transform list of item to list of itemBookingDto objects
      *
      * @param itemList to transform
-     * @return list of itemDto objects
+     * @return list of itemBookingDto objects
      */
     public static List<ItemBookingDto> toListItemBookingDto(List<Item> itemList) {
         return itemList.stream().map(ItemMapper::toItemBookingDto).collect(Collectors.toList());
+    }
+
+    /**
+     * Transform list of item to list of itemRequestDto objects
+     *
+     * @param itemList to transform
+     * @return list of itemRequestDto objects
+     */
+    public static List<ItemRequestDto> toListItemRequestDto(List<Item> itemList) {
+        return itemList.stream().map(ItemMapper::toItemRequestDto).collect(Collectors.toList());
     }
 
 }
