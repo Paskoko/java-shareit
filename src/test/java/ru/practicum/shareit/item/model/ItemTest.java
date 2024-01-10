@@ -29,9 +29,9 @@ class ItemTest {
                 .commentList(null)
                 .build();
 
-        Item resul = comparedItem.compare(item);
+        Item result = comparedItem.compare(item);
 
-        assertEquals(comparedItem, resul);
+        assertEquals(comparedItem, result);
     }
 
     @Test
@@ -46,8 +46,8 @@ class ItemTest {
                 .commentList(new ArrayList<>())
                 .build();
 
-        Item resul = comparedItem.compare(item);
+        Item result = comparedItem.compare(item);
 
-        assertEquals(comparedItem, resul);
+        assertEquals(comparedItem, result);
     }
 }
