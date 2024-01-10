@@ -92,7 +92,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<RequestDto> getAllRequests(Integer from, Integer size, String userId) {
         validateUserId(userId);
-        if ((from == null) && (size == null)) {
+        if ((from == null) || (size == null)) {
             return RequestMapper.toListRequestDto(requestRepository.findAll());
         }
 

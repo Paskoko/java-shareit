@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class BookingDto {
-    private final int id;
+    private int id;
     @DateTimeFormat
     private LocalDateTime start;
     @DateTimeFormat

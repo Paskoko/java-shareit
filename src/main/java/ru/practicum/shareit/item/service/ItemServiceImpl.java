@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.QItem;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.util.exceptions.ItemHeaderException;
@@ -41,9 +39,6 @@ import java.util.stream.Collectors;
 @Service
 public class ItemServiceImpl implements ItemService {
 
-    @Qualifier("itemInMemoryStorage")
-    private final ItemStorage itemStorage;
-
     private final ItemRepository itemRepository;
 
     private final UserService userService;
@@ -53,8 +48,7 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     @Autowired
-    public ItemServiceImpl(ItemStorage itemStorage, ItemRepository itemRepository, UserService userService, BookingRepository bookingRepository, CommentRepository commentRepository) {
-        this.itemStorage = itemStorage;
+    public ItemServiceImpl(ItemRepository itemRepository, UserService userService, BookingRepository bookingRepository, CommentRepository commentRepository) {
         this.itemRepository = itemRepository;
         this.userService = userService;
         this.bookingRepository = bookingRepository;
@@ -71,11 +65,11 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public ItemDto createItem(ItemDto itemDto, String userId) {
-        itemDto.setOwnerId(Integer.parseInt(userId));
         if (itemDto.getAvailable() == null) {
             throw new ValidationException("No available field!");
         }
         validateUserId(userId);
+        itemDto.setOwnerId(Integer.parseInt(userId));
         return ItemMapper.toItemDto(itemRepository.save(ItemMapper.toItem(itemDto)));
     }
 
@@ -114,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> itemList;
 
-        if ((from == null) && (size == null)) {
+        if ((from == null) || (size == null)) {
             itemList = itemRepository.findByOwnerId(Integer.parseInt(userId));
         } else {
             if ((from < 0) || (size <= 0)) {
@@ -179,7 +173,7 @@ public class ItemServiceImpl implements ItemService {
         BooleanExpression byDescription = QItem.item.description.containsIgnoreCase(text);
 
 
-        if ((from == null) && (size == null)) {
+        if ((from == null) || (size == null)) {
             searchItems = (List<Item>) itemRepository.findAll(byIsAvailable.and(byName.or(byDescription)));
         } else {
             if ((from < 0) || (size <= 0)) {

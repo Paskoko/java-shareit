@@ -149,7 +149,7 @@ public class BookingServiceImpl implements BookingService {
         }
         List<Booking> bookingList;
 
-        if ((from == null) && (size == null)) {
+        if ((from == null) || (size == null)) {
             bookingList = (List<Booking>) bookingRepository.findAll(byBookerId.and(byState),
                     Sort.by(sort, "start"));
         } else {
@@ -174,7 +174,8 @@ public class BookingServiceImpl implements BookingService {
      * @return list of all bookings
      */
     @Override
-    public List<BookingDto> getAllBookingsForAllItems(BookingState bookingState, Integer from, Integer size, String userId) {
+    public List<BookingDto> getAllBookingsForAllItems(BookingState bookingState,
+                                                      Integer from, Integer size, String userId) {
         validateUserId(userId);
 
         if (itemService.getAllItems(null, null, userId).isEmpty())  // Check all items, without pagination
@@ -201,7 +202,7 @@ public class BookingServiceImpl implements BookingService {
             }
             List<Booking> bookingList;
 
-            if ((from == null) && (size == null)) {
+            if ((from == null) || (size == null)) {
                 bookingList = (List<Booking>) bookingRepository.findAll(byItem.and(byState),
                         Sort.by(sort, "start"));
             } else {
