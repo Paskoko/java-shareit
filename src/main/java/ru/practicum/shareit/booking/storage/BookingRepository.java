@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import ru.practicum.shareit.booking.model.Booking;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer>, Quer
      * @param sort   sorted type
      * @return list of bookings
      */
+    @Transactional
     List<Booking> findByItem_IdAndStartIsBefore(int itemId, LocalDateTime start, Sort sort);
 
     /**
@@ -35,6 +37,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer>, Quer
      * @param sort   sorted type
      * @return list of bookings
      */
+    @Transactional
     List<Booking> findByItem_IdAndStartIsAfter(int itemId, LocalDateTime start, Sort sort);
 
 

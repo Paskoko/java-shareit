@@ -43,17 +43,21 @@ public interface BookingService {
      * Get all bookings for user
      *
      * @param bookingState of bookings
+     * @param from         index of the first element
+     * @param size         number of elements to return
      * @param userId       of owner
      * @return sorted list of all bookings
      */
-    List<BookingDto> getAllBookings(BookingState bookingState, String userId);
+    List<BookingDto> getAllBookings(BookingState bookingState, Integer from, Integer size, String userId);
 
     /**
      * Get list of all booking for all user's items
      *
      * @param bookingState of bookings
+     * @param from         index of the first element
+     * @param size         number of elements to return
      * @param userId       of owner
      * @return list of all bookings
      */
-    List<BookingDto> getAllBookingsForAllItems(BookingState bookingState, String userId);
+    List<BookingDto> getAllBookingsForAllItems(BookingState bookingState, Integer from, Integer size, String userId);
 }

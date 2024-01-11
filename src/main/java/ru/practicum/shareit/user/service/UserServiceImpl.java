@@ -1,14 +1,12 @@
 package ru.practicum.shareit.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
-import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.List;
 
@@ -18,14 +16,10 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Qualifier("userInMemoryStorage")
-    private final UserStorage userStorage;
-
     private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserStorage userStorage, UserRepository userRepository) {
-        this.userStorage = userStorage;
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

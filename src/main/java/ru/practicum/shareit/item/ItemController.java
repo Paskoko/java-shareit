@@ -7,7 +7,6 @@ import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -28,39 +27,43 @@ public class ItemController {
     /**
      * POST request handler with validation
      *
-     * @param item    to add
-     * @param request to get user id
+     * @param item   to add
+     * @param userId user id
      * @return added item
      */
     @PostMapping()
-    public ItemDto createItem(@Valid @RequestBody ItemDto item, HttpServletRequest request) {
-        String userId = request.getHeader("X-Sharer-User-Id");
+    public ItemDto createItem(@Valid @RequestBody ItemDto item,
+                              @RequestHeader(value = "X-Sharer-User-Id") String userId) {
         return itemService.createItem(item, userId);
     }
 
     /**
      * GET item by id request handler
      *
-     * @param itemId  of item
-     * @param request to get user id
+     * @param itemId of item
+     * @param userId user id
      * @return item
      */
     @GetMapping(value = "/{itemId}")
-    public ItemBookingDto getItemById(@PathVariable int itemId, HttpServletRequest request) {
-        String userId = request.getHeader("X-Sharer-User-Id");
+    public ItemBookingDto getItemById(@PathVariable int itemId,
+                                      @RequestHeader(value = "X-Sharer-User-Id") String userId) {
         return itemService.getItemById(itemId, userId);
     }
 
     /**
      * GET all items of the user
      *
-     * @param request to get user id
+     * @param from   index of the first element
+     * @param size   number of elements to return
+     * @param userId user id
      * @return list of all user's items
      */
     @GetMapping()
-    public List<ItemBookingDto> getAllItems(HttpServletRequest request) {
-        String userId = request.getHeader("X-Sharer-User-Id");
-        return itemService.getAllItems(userId);
+    public List<ItemBookingDto> getAllItems(
+            @RequestParam(value = "from", required = false) Integer from,
+            @RequestParam(value = "size", required = false) Integer size,
+            @RequestHeader(value = "X-Sharer-User-Id") String userId) {
+        return itemService.getAllItems(from, size, userId);
     }
 
     /**
@@ -68,12 +71,13 @@ public class ItemController {
      *
      * @param itemDto item to update
      * @param itemId  of item
-     * @param request to get user id
+     * @param userId  user id
      * @return updated item
      */
     @PatchMapping(value = "/{itemId}")
-    public ItemDto updateItem(@RequestBody ItemDto itemDto, @PathVariable int itemId, HttpServletRequest request) {
-        String userId = request.getHeader("X-Sharer-User-Id");
+    public ItemDto updateItem(@RequestBody ItemDto itemDto,
+                              @PathVariable int itemId,
+                              @RequestHeader(value = "X-Sharer-User-Id") String userId) {
         return itemService.updateItem(itemDto, itemId, userId);
 
     }
@@ -81,14 +85,19 @@ public class ItemController {
     /**
      * GET search request handler
      *
-     * @param text    to search
-     * @param request to get user id
+     * @param text   to search
+     * @param from   index of the first element
+     * @param size   number of elements to return
+     * @param userId user id
      * @return list of found items
      */
     @GetMapping(value = "/search")
-    public List<ItemDto> search(@RequestParam(value = "text") String text, HttpServletRequest request) {
-        String userId = request.getHeader("X-Sharer-User-Id");
-        return itemService.searchItems(text, userId);
+    public List<ItemDto> search(
+            @RequestParam(value = "text") String text,
+            @RequestParam(value = "from", required = false) Integer from,
+            @RequestParam(value = "size", required = false) Integer size,
+            @RequestHeader(value = "X-Sharer-User-Id") String userId) {
+        return itemService.searchItems(text, from, size, userId);
     }
 
 
@@ -97,13 +106,13 @@ public class ItemController {
      *
      * @param commentDto comment to add
      * @param itemId     of item
-     * @param request    to get user id
+     * @param userId     user id
      * @return added comment
      */
     @PostMapping(value = "/{itemId}/comment")
-    public CommentDto addComment(@Valid @RequestBody CommentDto commentDto, @PathVariable int itemId,
-                                 HttpServletRequest request) {
-        String userId = request.getHeader("X-Sharer-User-Id");
+    public CommentDto addComment(@Valid @RequestBody CommentDto commentDto,
+                                 @PathVariable int itemId,
+                                 @RequestHeader(value = "X-Sharer-User-Id") String userId) {
         return itemService.addComment(commentDto, itemId, userId);
     }
 }

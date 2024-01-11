@@ -1,39 +1,53 @@
 package ru.practicum.shareit.request;
 
-import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.model.Request;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class mapper for itemRequest object
  */
 public class RequestMapper {
     /**
-     * Transform itemRequest to itemRequestDto object
+     * Transform request to requestDto object
      *
-     * @param itemRequest to transform
-     * @return itemRequestDto object
+     * @param request to transform
+     * @return requestDto object
      */
-    public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
-        return ItemRequestDto.builder()
-                .id(itemRequest.getId())
-                .description(itemRequest.getDescription())
-                .requestId(itemRequest.getRequestId())
-                .time(itemRequest.getTime())
+    public static RequestDto toRequestDto(Request request) {
+        return RequestDto.builder()
+                .id(request.getId())
+                .description(request.getDescription())
+                .requester(request.getRequester())
+                .created(request.getCreated())
                 .build();
     }
 
     /**
-     * Transform itemRequestDto to itemRequest object
+     * Transform requestDto to request object
      *
-     * @param itemRequestDto to transform
-     * @return itemRequest object
+     * @param requestDto to transform
+     * @return request object
      */
-    public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
-        return ItemRequest.builder()
-                .id(itemRequestDto.getId())
-                .description(itemRequestDto.getDescription())
-                .requestId(itemRequestDto.getRequestId())
-                .time(itemRequestDto.getTime())
+    public static Request toRequest(RequestDto requestDto) {
+        return Request.builder()
+                .id(requestDto.getId())
+                .description(requestDto.getDescription())
+                .requester(requestDto.getRequester())
+                .created(requestDto.getCreated())
                 .build();
+    }
+
+
+    /**
+     * Transform list of request to list of requestDto objects
+     *
+     * @param requestList to transform
+     * @return list of requestDto objects
+     */
+    public static List<RequestDto> toListRequestDto(List<Request> requestList) {
+        return requestList.stream().map(RequestMapper::toRequestDto).collect(Collectors.toList());
     }
 }
