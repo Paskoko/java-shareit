@@ -143,7 +143,6 @@ public class BookingServiceImpl implements BookingService {
         if (bookingState.equals(BookingState.CURRENT)) {        // Check other bookings to be current
             byState = byState.or(QBooking.booking.start.before(now)
                     .and(QBooking.booking.end.after(now)));
-            sort = Sort.Direction.ASC;
         }
         List<Booking> bookingList;
 
@@ -193,7 +192,6 @@ public class BookingServiceImpl implements BookingService {
             if (bookingState.equals(BookingState.CURRENT)) {        // Check other bookings to be current
                 byState = byState.or(QBooking.booking.start.before(now)
                         .and(QBooking.booking.end.after(now)));
-                sort = Sort.Direction.ASC;
             }
             List<Booking> bookingList;
 
