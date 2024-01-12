@@ -10,11 +10,12 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.booking.dto.BookingPostDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.client.BaseClient;
-import ru.practicum.shareit.util.exceptions.ItemHeaderException;
 
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.Map;
+
+import static ru.practicum.shareit.util.Util.checkUserId;
 
 @Service
 public class BookingClient extends BaseClient {
@@ -128,17 +129,6 @@ public class BookingClient extends BaseClient {
             return get("/owner?state={state}", Integer.parseInt(userId), parameters);
         }
         return get("/owner", Integer.parseInt(userId));
-    }
-
-    /**
-     * Validation of item's owner
-     *
-     * @param userId of owner
-     */
-    private void checkUserId(String userId) {
-        if (userId == null) {
-            throw new ItemHeaderException("No header with user id!");
-        }
     }
 
     /**

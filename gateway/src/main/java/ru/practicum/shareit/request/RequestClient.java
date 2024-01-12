@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.request.dto.RequestDto;
-import ru.practicum.shareit.util.exceptions.ItemHeaderException;
 
 import java.util.Map;
+
+import static ru.practicum.shareit.util.Util.checkUserId;
 
 /**
  * Class client to prepare REST requests
@@ -85,17 +86,6 @@ public class RequestClient extends BaseClient {
             return get("/all?from={from}&size={size}", Integer.parseInt(userId), parameters);
         } else {
             return get("/all", Integer.parseInt(userId));
-        }
-    }
-
-    /**
-     * Validation of item's owner
-     *
-     * @param userId of owner
-     */
-    private void checkUserId(String userId) {
-        if (userId == null) {
-            throw new ItemHeaderException("No header with user id!");
         }
     }
 }

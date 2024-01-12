@@ -10,10 +10,11 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.util.exceptions.ItemHeaderException;
 
 import javax.validation.ValidationException;
 import java.util.Map;
+
+import static ru.practicum.shareit.util.Util.checkUserId;
 
 /**
  * Class client to prepare REST requests
@@ -133,16 +134,5 @@ public class ItemClient extends BaseClient {
     public ResponseEntity<Object> addComment(CommentDto commentDto, int itemId, String userId) {
         checkUserId(userId);
         return post("/" + itemId + "/comment", Integer.parseInt(userId), commentDto);
-    }
-
-    /**
-     * Validation of item's owner
-     *
-     * @param userId of owner
-     */
-    private void checkUserId(String userId) {
-        if (userId == null) {
-            throw new ItemHeaderException("No header with user id!");
-        }
     }
 }
